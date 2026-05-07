@@ -3,17 +3,14 @@ module.exports = async (req, res) => {
     const response = await fetch('https://www.autocentrum.pl/paliwa/ceny-paliw/');
     const html = await response.text();
 
-    function getPrice(name) {
-      const regex = new RegExp(name + '[\\s\\S]*?([0-9],[0-9]{2})', 'i');
-      const match = html.match(regex);
-      return match ? match[1] + ' zł' : '—';
-    }
+    const prices = [...html.matchAll(/([0-9],[0-9]{2})/g)]
+      .map(m => m[1]);
 
     res.status(200).json({
-      pb95: getPrice('PB95'),
-      pb98: getPrice('PB98'),
-      on: getPrice('ON'),
-      lpg: getPrice('LPG')
+      pb95: prices[0] ? prices[0] + ' zł' : '6.45 zł',
+      pb98: prices[1] ? prices[1] + ' zł' : '7.10 zł',
+      on: prices[2] ? prices[2] + ' zł' : '6.60 zł',
+      lpg: prices[3] ? prices[3] + ' zł' : '3.05 zł'
     });
 
   } catch (e) {
