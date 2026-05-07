@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOLID-AUTO Polska</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{
+background:#5b0000;
+background-image:linear-gradient(rgba(100,0,0,.75),rgba(40,0,0,.9)),url('banner.jpeg');
+background-size:cover;
+background-position:center;
+color:white;
+min-height:100vh;
+}
+.topbar{
+background:white;
+padding:15px 25px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+color:black;
+}
+.topbar img{height:70px;border-radius:12px}
+.hero{
+padding:40px 20px;
+}
+h1{
+font-size:64px;
+margin-bottom:10px;
+}
+.subtitle{
+font-size:24px;
+opacity:.9;
+margin-bottom:35px;
+}
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+}
+.card{
+background:rgba(255,255,255,.08);
+backdrop-filter:blur(12px);
+padding:25px;
+border-radius:24px;
+border:1px solid rgba(255,255,255,.1);
+}
+.station{
+font-size:30px;
+font-weight:bold;
+margin-bottom:20px;
+color:#ffd4d4;
+}
+.price{
+font-size:20px;
+margin:12px 0;
+}
+.side{
+margin-top:30px;
+background:rgba(255,255,255,.08);
+padding:25px;
+border-radius:24px;
+backdrop-filter:blur(12px);
+}
+.side h2{
+margin-bottom:20px;
+}
+.avg{
+display:flex;
+justify-content:space-between;
+padding:14px;
+margin:10px 0;
+background:rgba(255,255,255,.06);
+border-radius:12px;
+font-size:18px;
+}
+.footer{
+text-align:center;
+padding:30px;
+opacity:.7;
+}
+@media(max-width:768px){
+h1{font-size:48px}
+.subtitle{font-size:20px}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+<img src="banner.jpeg">
+<div><b>SOLID-AUTO POLSKA</b></div>
+</div>
+
+<div class="hero">
+<h1>Ceny paliw</h1>
+<div class="subtitle">Aktualne ceny paliw w Polsce</div>
+
+<div class="grid">
+<div class="card">
+<div class="station">ORLEN</div>
+<div class="price" id="o95">Pb95 — ładowanie...</div>
+<div class="price" id="o98">Pb98 — ładowanie...</div>
+<div class="price" id="oon">ON — ładowanie...</div>
+<div class="price" id="olpg">LPG — ładowanie...</div>
+</div>
+
+<div class="card">
+<div class="station">BP</div>
+<div class="price" id="b95">Pb95 — ładowanie...</div>
+<div class="price" id="b98">Pb98 — ładowanie...</div>
+<div class="price" id="bon">ON — ładowanie...</div>
+<div class="price" id="blpg">LPG — ładowanie...</div>
+</div>
+
+<div class="card">
+<div class="station">Shell</div>
+<div class="price" id="s95">Pb95 — ładowanie...</div>
+<div class="price" id="s98">Pb98 — ładowanie...</div>
+<div class="price" id="son">ON — ładowanie...</div>
+<div class="price" id="slpg">LPG — ładowanie...</div>
+</div>
+</div>
+
+<div class="side">
+<h2>Średnie ceny</h2>
+<div class="avg"><span>Pb95</span><span id="avg95">...</span></div>
+<div class="avg"><span>Pb98</span><span id="avg98">...</span></div>
+<div class="avg"><span>ON</span><span id="avgon">...</span></div>
+<div class="avg"><span>LPG</span><span id="avglpg">...</span></div>
+</div>
+</div>
+
+<div class="footer">
+SOLID-AUTO • LIVE Poland Fuel Prices
+</div>
+
+<script>
+async function loadPrices(){
+try{
+const res = await fetch('/api/prices');
+const data = await res.json();
+
+document.getElementById('avg95').innerText=data.pb95;
+document.getElementById('avg98').innerText=data.pb98;
+document.getElementById('avgon').innerText=data.on;
+document.getElementById('avglpg').innerText=data.lpg;
+
+const ids=['o','b','s'];
+
+ids.forEach(i=>{
+document.getElementById(i+'95').innerText='Pb95 — '+data.pb95;
+document.getElementById(i+'98').innerText='Pb98 — '+data.pb98;
+document.getElementById(i+'on').innerText='ON — '+data.on;
+document.getElementById(i+'lpg').innerText='LPG — '+data.lpg;
+});
+
+}catch(e){
+console.log(e);
+}
+}
+
+loadPrices();
+setInterval(loadPrices,300000);
+</script>
+
+</body>
+</html>
